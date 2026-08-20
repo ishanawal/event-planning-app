@@ -1,17 +1,33 @@
-import express, { Application, Request, Response } from "express";
-import { listen } from "node:quic";
+import dotenv from "dotenv";
+dotenv.config();
 
-const app: Application = express();
-const port = 3000;
+import app from "./app";
+import db from "./config/database";
+import logger from "./utils/logger";
 
-app.use(express.urlencoded({ extended: true }));
+const PORT = Number(process.env.PORT) || 4000;
 
-app.use(express.json());
+async function start() {
+  try {
+    await db.raw("SELECT 1");
+    logger.info("Database connection established");
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello from the backend");
+    app.listen(PORT, () => {
+      logger.info(`Server running on http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    logger.error("Failed to start server", {
+      error: (err as Error).message,
+    });
+    process.exit(1);
+  }
+}
+
+// Graceful shutdown
+process.on("SIGTERM", async () => {
+  logger.info("SIGTERM received, shutting down");
+  await db.destroy();
+  process.exit(0);
 });
 
-app.listen(port, () => {
-  console.log(`Server is running in http://localhost:${port}`);
-});
+start();
