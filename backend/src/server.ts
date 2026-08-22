@@ -9,6 +9,7 @@ const PORT = Number(process.env.PORT) || 4000;
 
 async function start() {
   try {
+    // Verifying DB connection before accepting traffic
     await db.raw("SELECT 1");
     logger.info("Database connection established");
 

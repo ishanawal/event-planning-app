@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import logger from "./utils/logger";
 import authRoutes from "./modules/auth/auth.routes";
 import tagsRoutes from "./modules/tags/tags.routes";
+import rsvpsRoutes from "./modules/events/events.routes";
 import { errorHandler } from "./middleware/error.middleware";
 const app = express();
 
@@ -30,6 +31,8 @@ app.get("/health", (_req, res) => {
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/tags", tagsRoutes);
+app.use("/api/v1/tags", tagsRoutes);
+app.use("/api/v1/events/:eventId/rsvps", rsvpsRoutes);
 
 app.use((_req, res) => {
   res.status(404).json({
