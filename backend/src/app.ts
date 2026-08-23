@@ -1,11 +1,13 @@
 import express from "express";
 import cors from "cors";
+import swaggerUi from "swagger-ui-express";
 import cookieParser from "cookie-parser";
 import logger from "./utils/logger";
 import authRoutes from "./modules/auth/auth.routes";
 import tagsRoutes from "./modules/tags/tags.routes";
 import rsvpsRoutes from "./modules/events/events.routes";
 import { errorHandler } from "./middleware/error.middleware";
+import { swaggerSpec } from "./config/swagger";
 const app = express();
 
 app.use(
@@ -23,6 +25,22 @@ app.use((req, _res, next) => {
     query: req.query,
   });
   next();
+});
+
+app.use(
+  "/api/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    customSiteTitle: "Event planning API docs",
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  }),
+);
+
+app.get("/api/docs.json", (_req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(swaggerSpec);
 });
 
 app.get("/health", (_req, res) => {
