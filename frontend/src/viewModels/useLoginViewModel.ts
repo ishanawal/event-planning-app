@@ -6,6 +6,8 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import * as authApi from "../api/auth.api";
 import { loginSchema } from "../schema/loginSchema";
+import type { AppError } from "../types/auth.types";
+import { extractServerError } from "../utils/extractErrors";
 
 export interface LoginFormState {
   email: string;
@@ -89,14 +91,4 @@ export function useLoginViewModel(): LoginViewModel {
     handleFieldChange,
     handleSubmit,
   };
-}
-
-export function extractServerError(err: unknown): string {
-  if (axios.isAxiosError(err)) {
-    return (
-      err.response?.data.error?.message ??
-      "Something went wrong. Please try again."
-    );
-  }
-  return "Something went wrong. Please try again.";
 }

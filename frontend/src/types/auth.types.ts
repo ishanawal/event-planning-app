@@ -1,3 +1,5 @@
+import type { Meta } from "./event.types";
+
 export interface User {
   id: number;
   name: string;
@@ -9,6 +11,7 @@ export interface User {
 export interface ApiSuccess<T> {
   success: true;
   data: T;
+  meta?: Meta;
 }
 
 export interface AppError {

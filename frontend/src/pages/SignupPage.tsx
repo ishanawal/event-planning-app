@@ -178,35 +178,6 @@ export default function SignupPage() {
 
           <section className="hidden lg:block">
             <div className="max-w-xl">
-              <div className="mb-8 flex items-center gap-3">
-                <div
-                  className="
-                      flex
-                      h-11
-                      w-11
-                      items-center
-                      justify-center
-                      rounded-xl
-                      border
-                      border-primary/15
-                      bg-primary/10
-                      text-primary
-                    "
-                >
-                  <CalendarDays size={23} strokeWidth={1.6} />
-                </div>
-
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-[0.18em] text-primary">
-                    Event Planner
-                  </p>
-
-                  <p className="mt-0.5 text-xs text-muted">
-                    Plan something memorable
-                  </p>
-                </div>
-              </div>
-
               <p
                 className="
                   text-xs
