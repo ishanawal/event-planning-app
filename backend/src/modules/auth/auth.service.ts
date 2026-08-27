@@ -52,7 +52,7 @@ export async function login(data: LoginBody) {
     throw new AppError("Invalid email or password", 401, "INVALID_CREDENTIALS");
   }
 
-  const payload = { userId: user.id, email: user.email };
+  const payload = { userId: user.id, email: user.email, name: user.name };
 
   const accessToken = signAccessToken(payload);
   const refreshToken = signRefreshToken(payload);
@@ -98,6 +98,7 @@ export async function refreshAccessToken(refreshToken: string) {
   const newAccessToken = signAccessToken({
     userId: payload.userId,
     email: payload.email,
+    name: payload.name,
   });
 
   return { accessToken: newAccessToken };

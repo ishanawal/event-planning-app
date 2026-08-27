@@ -28,12 +28,13 @@ export async function getRsvps(
   next: NextFunction,
 ): Promise<void> {
   try {
-    const summary = await rsvpsService.getRsvpsForEvent(
+    const result = await rsvpsService.getRsvpsForEvent(
       Number(req.params.eventId),
+      req.user?.userId, // optional, will be undefined for unauthenticated requests
     );
     res.json({
       success: true,
-      data: { summary },
+      data: result, // { summary, user_rsvp }
     });
   } catch (err) {
     next(err);

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import * as rsvpsController from "./rsps.controller";
-import { requireAuth } from "../../middleware/auth.middleware";
+import { requireAuth, optionalAuth } from "../../middleware/auth.middleware";
 import { validate } from "../../middleware/validate.middleware";
 import { upsertRsvpSchema } from "./rsvps.schema";
 
@@ -31,7 +31,7 @@ const router = Router({ mergeParams: true }); // We need to merge params inorder
  *                   properties:
  *                     summary: { $ref: '#/components/schemas/RsvpSummary' }
  */
-router.get("/", rsvpsController.getRsvps);
+router.get("/", optionalAuth, rsvpsController.getRsvps);
 
 /**
  * @openapi

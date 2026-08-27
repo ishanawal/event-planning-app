@@ -53,7 +53,7 @@ export async function listEvents(
   query: ListEventsQuery,
   filter: EventFilter = "all",
 ) {
-  const { page, limit, type, tags, search, sortBy, order } = query;
+  const { page, limit, type, tags, search, sortBy, order, creator_id } = query;
   const offset = (page - 1) * limit;
   const now = new Date();
 
@@ -82,6 +82,11 @@ export async function listEvents(
   // Filtering by event types
   if (type) {
     baseQuery = baseQuery.where("events.type", type);
+  }
+
+  // Filtering by creator
+  if (creator_id) {
+    baseQuery = baseQuery.where("events.creator_id", creator_id);
   }
 
   // Filtering via searching
@@ -115,47 +120,45 @@ export async function listEvents(
         "users.name",
       )
       .havingRaw("COUNT(DISTINCT filter_tags.name) = ?", [tagNames.length]);
-
-    // Counting total for pagination
-    const countQuery = db("events").count("events.id as count");
-
-    if (filter === "upcoming") countQuery.where("events.event_date", ">=", now);
-
-    if (filter === "past") countQuery.where("events.event_date", "<=", now);
-
-    if (type) countQuery.where("events.type", type);
-
-    if (search) {
-      const term = `%${search}%`;
-      countQuery.where((qb) => {
-        qb.whereILike("events.title", term)
-          .orWhereILike("events.description", term)
-          .orWhereILike("events.location", term);
-      });
-    }
-
-    const [{ count }] = await countQuery;
-    const total = Number(count);
-
-    const events = await baseQuery
-      .orderBy(`events.${sortBy}`, order)
-      .limit(limit)
-      .offset(offset);
-
-    const eventsIds = events.map((e: { id: number }) => e.id);
-
-    const tagsMap = await fetchTagsForEvents(eventsIds);
-
-    const data = events.map((event: DbEvent & { creator_name: string }) => ({
-      ...event,
-      tags: tagsMap[event.id] || [],
-    }));
-
-    return {
-      data,
-      meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
-    };
   }
+
+  // Count total matching rows for pagination
+  const countQuery = db("events").count("events.id as count");
+
+  if (filter === "upcoming") countQuery.where("events.event_date", ">=", now);
+  if (filter === "past") countQuery.where("events.event_date", "<", now);
+  if (type) countQuery.where("events.type", type);
+  if (creator_id) countQuery.where("events.creator_id", creator_id);
+  if (search) {
+    const term = `%${search}%`;
+    countQuery.where((qb) => {
+      qb.whereILike("events.title", term)
+        .orWhereILike("events.description", term)
+        .orWhereILike("events.location", term);
+    });
+  }
+
+  const [{ count }] = await countQuery;
+  const total = Number(count);
+
+  const events = await baseQuery
+    .orderBy(`events.${sortBy}`, order)
+    .limit(limit)
+    .offset(offset);
+
+  const eventsIds = events.map((e: { id: number }) => e.id);
+
+  const tagsMap = await fetchTagsForEvents(eventsIds);
+
+  const data = events.map((event: DbEvent & { creator_name: string }) => ({
+    ...event,
+    tags: tagsMap[event.id] || [],
+  }));
+
+  return {
+    data,
+    meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
+  };
 }
 
 export async function getEventsById(id: number) {

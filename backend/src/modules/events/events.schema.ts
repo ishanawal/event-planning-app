@@ -51,6 +51,7 @@ export const listEventsSchema = z.object({
     search: z.string().max(200).optional(),
     sortBy: z.enum(["event_date", "created_at", "title"]).default("event_date"),
     order: z.enum(["asc", "desc"]).default("asc"),
+    creator_id: z.coerce.number().int().positive().optional(),
   }),
 });
 
