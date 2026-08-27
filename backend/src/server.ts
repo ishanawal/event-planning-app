@@ -9,17 +9,20 @@ const PORT = Number(process.env.PORT) || 4000;
 
 async function start() {
   try {
-    // Verifying DB connection before accepting traffic
     await db.raw("SELECT 1");
+
     logger.info("Database connection established");
 
     app.listen(PORT, () => {
       logger.info(`Server running on http://localhost:${PORT}`);
     });
   } catch (err) {
+    console.error("DATABASE STARTUP ERROR:", err);
+
     logger.error("Failed to start server", {
-      error: (err as Error).message,
+      error: err,
     });
+
     process.exit(1);
   }
 }

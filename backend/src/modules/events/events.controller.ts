@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as eventsService from "./events.service";
-import { success } from "zod";
+import { ListEventsQuery } from "./events.schema";
 
 export async function listEvents(
   req: Request,
@@ -8,9 +8,10 @@ export async function listEvents(
   next: NextFunction,
 ): Promise<void> {
   try {
-    const result = await eventsService.listEvents(req.query as any);
+    const query = res.locals.validated.query as ListEventsQuery;
+    const result = await eventsService.listEvents(query);
     res.json({
-      succes: true,
+      success: true,
       ...result,
     });
   } catch (err) {
@@ -24,7 +25,8 @@ export async function listUpcomingEvents(
   next: NextFunction,
 ): Promise<void> {
   try {
-    const result = await eventsService.listEvents(req.query as any, "upcoming");
+    const query = res.locals.validated.query as ListEventsQuery;
+    const result = await eventsService.listEvents(query, "upcoming");
     res.json({
       success: true,
       ...result,
@@ -40,7 +42,8 @@ export async function listPastEvents(
   next: NextFunction,
 ): Promise<void> {
   try {
-    const result = await eventsService.listEvents(req.query as any, "past");
+    const query = res.locals.validated.query as ListEventsQuery;
+    const result = await eventsService.listEvents(query, "past");
     res.json({
       success: true,
       ...result,

@@ -18,7 +18,7 @@ export const createEventSchema = z.object({
       })
       .datetime({ message: "event_date must be a valid ISO 8601 datetime" }),
     type: z.enum(["public", "private"]).default("public"),
-    tags_ids: z.array(z.number().int().positive()).optional().default([]),
+    tag_ids: z.array(z.number().int().positive()).optional().default([]),
   }),
 });
 

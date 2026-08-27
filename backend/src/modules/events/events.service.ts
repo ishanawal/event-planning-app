@@ -117,25 +117,34 @@ export async function listEvents(
       .havingRaw("COUNT(DISTINCT filter_tags.name) = ?", [tagNames.length]);
 
     // Counting total for pagination
-    const countQuery = baseQuery
-      .clone()
-      .clearSelect()
-      .clearOrder()
-      .count("events.id as count");
+    const countQuery = db("events").count("events.id as count");
+
+    if (filter === "upcoming") countQuery.where("events.event_date", ">=", now);
+
+    if (filter === "past") countQuery.where("events.event_date", "<=", now);
+
+    if (type) countQuery.where("events.type", type);
+
+    if (search) {
+      const term = `%${search}%`;
+      countQuery.where((qb) => {
+        qb.whereILike("events.title", term)
+          .orWhereILike("events.description", term)
+          .orWhereILike("events.location", term);
+      });
+    }
 
     const [{ count }] = await countQuery;
     const total = Number(count);
 
-    // Sorting and paginating
     const events = await baseQuery
       .orderBy(`events.${sortBy}`, order)
       .limit(limit)
       .offset(offset);
 
-    // Attatching tags
-    const eventIds = events.map((e: DbEvent) => e.id);
+    const eventsIds = events.map((e: { id: number }) => e.id);
 
-    const tagsMap = await fetchTagsForEvents(eventIds);
+    const tagsMap = await fetchTagsForEvents(eventsIds);
 
     const data = events.map((event: DbEvent & { creator_name: string }) => ({
       ...event,
@@ -144,12 +153,7 @@ export async function listEvents(
 
     return {
       data,
-      meta: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
+      meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
     };
   }
 }
@@ -171,9 +175,9 @@ export async function getEventsById(id: number) {
 }
 
 export async function createEvent(data: CreateEventBody, creatorId: number) {
-  const { tags_ids = [], ...eventData } = data;
+  const { tag_ids = [], ...eventData } = data;
 
-  await validateTagIds(tags_ids);
+  await validateTagIds(tag_ids);
 
   const event = await db.transaction(async (trx) => {
     const [newEvent] = await trx("events")
@@ -184,8 +188,8 @@ export async function createEvent(data: CreateEventBody, creatorId: number) {
       })
       .returning("*");
 
-    if (tags_ids.length > 0) {
-      const tagLinks = tags_ids.map((tag_id) => ({
+    if (tag_ids.length > 0) {
+      const tagLinks = tag_ids.map((tag_id) => ({
         event_id: newEvent.id,
         tag_id,
       }));

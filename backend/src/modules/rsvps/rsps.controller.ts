@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import * as rsvpsService from "./rsvps.service";
-import { RecordWithTtl } from "node:dns";
-import { success } from "zod";
 
 export async function upsertRsvp(
   req: Request,

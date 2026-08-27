@@ -5,7 +5,8 @@ import cookieParser from "cookie-parser";
 import logger from "./utils/logger";
 import authRoutes from "./modules/auth/auth.routes";
 import tagsRoutes from "./modules/tags/tags.routes";
-import rsvpsRoutes from "./modules/events/events.routes";
+import eventRoutes from "./modules/events/events.routes";
+import rsvpsRoutes from "./modules/rsvps/rsvps.routes";
 import { errorHandler } from "./middleware/error.middleware";
 import { swaggerSpec } from "./config/swagger";
 const app = express();
@@ -48,7 +49,7 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/tags", tagsRoutes);
+app.use("/api/v1/events", eventRoutes);
 app.use("/api/v1/tags", tagsRoutes);
 app.use("/api/v1/events/:eventId/rsvps", rsvpsRoutes);
 

@@ -53,7 +53,7 @@ router.get("/", tagsController.getAllTags);
  *       409:
  *         description: Tag already exists
  */
-router.get(
+router.post(
   "/",
   requireAuth,
   validate(createTagSchema),
