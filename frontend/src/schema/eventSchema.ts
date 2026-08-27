@@ -1,7 +1,7 @@
 import { z } from "zod/v3";
 
 export const eventSchema = z.object({
-  itle: z
+  title: z
     .string({ required_error: "Title is required" })
     .min(1, "Title cannot be empty")
     .max(255, "Title must be at most 255 characters")
@@ -17,5 +17,5 @@ export const eventSchema = z.object({
     })
     .datetime({ message: "event_date must be a valid ISO 8601 datetime" }),
   type: z.enum(["public", "private"]).default("public"),
-  tags_ids: z.array(z.number().int().positive()).optional().default([]),
+  tag_ids: z.array(z.number().int().positive()).optional().default([]),
 });

@@ -15,7 +15,7 @@ export function useLogoutViewModel(): LogoutViewModel {
     mutationFn: authApi.logout,
     onSuccess: () => {
       setUser(null);
-      navigate("/login", { replace: true });
+      navigate("/", { replace: true });
     },
   });
 

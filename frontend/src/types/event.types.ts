@@ -32,6 +32,7 @@ export interface GetEventsPayload {
   search?: string;
   sortBy?: string;
   order?: OrderDir;
+  creator_id?: number;
 }
 
 export interface CreateEventsPayload {
@@ -40,7 +41,7 @@ export interface CreateEventsPayload {
   location: string;
   event_date: string;
   type: EventTypes;
-  tag_ids: string[];
+  tag_ids: number[];
 }
 
 export interface UpdateEventPayload {
@@ -49,11 +50,15 @@ export interface UpdateEventPayload {
   location?: string;
   event_date?: string;
   type?: EventTypes;
-  tag_ids?: string[];
+  tag_ids?: number[];
 }
 
-export type GetEventsResponse = ApiSuccess<Event[]>;
+export interface GetEventsResponse {
+  success: true;
+  data: Event[];
+  meta: Meta;
+}
 
-export type CreateEventResponse = ApiSuccess<Event>;
+export type CreateEventResponse = ApiSuccess<{ event: Event }>;
 
-export type GetEventByIdResponse = ApiSuccess<Event>;
+export type GetEventByIdResponse = ApiSuccess<{ event: Event }>;

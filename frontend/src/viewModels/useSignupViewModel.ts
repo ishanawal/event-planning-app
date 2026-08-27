@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { signupSchema } from "../schema/signupSchema";
-import { extractServerError } from "./useLoginViewModel";
+import { extractServerError } from "../utils/extractErrors";
 
 export interface SignupFormState {
   name: string;

@@ -68,14 +68,17 @@ export function useLoginViewModel(): LoginViewModel {
       const errors: LoginFormErrors = {};
       result.error.errors.forEach((err) => {
         const field = err.path[0] as keyof LoginFormErrors;
-
         if (!errors[field]) errors[field] = err.message;
       });
       setFieldErrors(errors);
       return;
     }
 
-    mutation.mutate(result.data);
+    // Using mutateAsync + catch so that errors stay inside the component,
+    // never bubble up and cause the page to reload/remount.
+    mutation.mutateAsync(result.data).catch(() => {
+      // error is already captured in mutation.error
+    });
   }
 
   const serverError = mutation.isError
