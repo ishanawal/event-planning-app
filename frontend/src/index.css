@@ -1,49 +1,76 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #080b06;
-  --color-background-soft: #0d120a;
+  --color-background: #f7f5e8;
+  --color-surface: #edeedb;
+  --color-card: #fffdf7;
+  --color-card-hover: #fafaf1;
+  --color-input: #fffdf8;
 
-  --color-surface: #10160c;
-  --color-card: #121910;
-  --color-card-hover: #171f13;
-  --color-input: #0e150b;
+  --color-border: #dddfc9;
+  --color-border-hover: #c5c9ad;
+  --color-border-active: #9fa67e;
 
-  --color-border: #303a1d;
-  --color-border-hover: #4a5729;
-  --color-border-active: #6c7a3b;
+  --color-primary: #6faf45;
+  --color-primary-hover: #5f9d38;
+  --color-primary-active: #4d852d;
+  --color-primary-dim: #6faf4518;
 
-  --color-primary: #b8c878;
-  --color-primary-hover: #c9d98a;
-  --color-primary-active: #a6b665;
+  --color-secondary: #edeedb;
+  --color-secondary-hover: #e3e5d0;
 
-  --color-secondary: #41431b;
-  --color-secondary-hover: #55582a;
-  --color-secondary-muted: #292b13;
+  --color-foreground: #1d2419;
+  --color-foreground-secondary: #3f4939;
 
-  --color-cream: #f8f3e1;
-  --color-cream-secondary: #e3dbbb;
+  --color-cream: #1d2419;
+  --color-cream-secondary: #3f4939;
 
-  --color-foreground: #f8f3e1;
-  --color-foreground-secondary: #d8d5c1;
-  --color-muted: #969b88;
-  --color-placeholder: #666d5a;
-  --color-disabled: #454a3d;
+  --color-muted: #707968;
+  --color-placeholder: #a1a897;
+  --color-disabled: #ccd0c3;
 
-  --color-icon: #b8c878;
-  --color-icon-muted: #727a60;
+  --color-success: #3f8745;
+  --color-warning: #a57928;
+  --color-danger: #b94d4d;
+  --color-info: #47798a;
 
-  --color-success: #aebf72;
-  --color-warning: #d5b96a;
-  --color-danger: #d9786f;
-  --color-info: #8da99a;
-
-  --color-success-bg: #151e0d;
-  --color-warning-bg: #211c0d;
-  --color-danger-bg: #24120f;
-  --color-info-bg: #101b17;
+  --color-success-bg: #eef7ec;
+  --color-warning-bg: #faf5e7;
+  --color-danger-bg: #fcf0f0;
+  --color-info-bg: #eff6f7;
 }
+
 body {
   margin: 0;
-  background-color: #12130a;
+  background-color: #f5f6f1;
+  color: #1c1917;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d6d3d1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a29e;
+}
+
+::selection {
+  background: #4f46e520;
+  color: #1c1917;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.5;
+}
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 0.8;
 }

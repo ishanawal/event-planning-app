@@ -2,576 +2,311 @@ import {
   ArrowRight,
   Cake,
   CalendarDays,
-  CheckCircle2,
   ChevronRight,
   LockKeyhole,
-  Plus,
+  MapPin,
   Search,
   Tags,
   Users,
   BriefcaseBusiness,
   Palette,
 } from "lucide-react";
-
 import { Link } from "react-router-dom";
-
 import Navbar from "../components/layout/Navbar";
-import Button from "../components/ui/Button";
-import Category from "../components/common/CategoryCard";
-import Step from "../components/common/StepsCard";
-import FeatureCard from "../components/common/FeatureCard";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar variant="marketing" />
 
-      {/* Hero Section*/}
-
-      <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0">
-          <div
-            className="
-              absolute
-              left-1/2
-              top-70
-              h-130
-              w-180
-              -translate-x-1/2
-              rounded-full
-              bg-primary/[0.035]
-              blur-3xl
-            "
-          />
-
-          <div
-            className="
-              absolute
-              -right-40
-              top-80
-              h-75
-              w-75
-              rounded-full
-              bg-secondary/6
-              blur-3xl
-            "
-          />
-        </div>
-
-        <div
-          className="
-            relative
-            mx-auto
-            max-w-7xl
-            px-6
-            py-16
-            sm:py-20
-            lg:px-8
-            lg:py-24
-          "
-        >
-          <div
-            className="
-              grid
-              items-center
-              gap-14
-              lg:grid-cols-[1.05fr_0.95fr]
-              lg:gap-20
-            "
-          >
-            {/* Left */}
-            <div className="max-w-2xl">
-              <p className="text-sm font-medium text-primary">
-                Event planning, made simple.
-              </p>
-
-              <h1
-                className="
-                  mt-7
-                  max-w-xl
-                  font-serif
-                  text-5xl
-                  font-semibold
-                  leading-[1.04]
-                  tracking-tight
-                  text-cream
-                  sm:text-6xl
-                "
-              >
-                Got something
-                <br />
-                <span className="text-primary">to plan?</span>
-              </h1>
-
-              <p
-                className="
-                  mt-6
-                  max-w-lg
-                  text-base
-                  leading-7
-                  text-muted
-                  sm:text-lg
-                "
-              >
-                Keep the date, details, and people in one place. Create an
-                event, share it, and get on with the fun part.
-              </p>
-
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link to="/signup">
-                  <Button size="lg" rightIcon={<ArrowRight size={17} />}>
-                    Create an event
-                  </Button>
-                </Link>
-
-                <Link to="/events">
-                  <Button variant="outline" size="lg">
-                    Browse events
-                  </Button>
-                </Link>
-              </div>
-
-              <p className="mt-5 text-xs text-placeholder">
-                Free to get started. No complicated setup.
-              </p>
-            </div>
-
-            {/* Right Section */}
-            <div className="relative mx-auto w-full max-w-md lg:ml-auto">
-              <div
-                className="
-                  absolute
-                  -inset-5
-                  rounded-4xl
-                  bg-primary/4
-                  blur-2xl
-                "
-              />
-
-              <div
-                className="
-                  relative
-                  rounded-2xl
-                  border
-                  border-border
-                  bg-card
-                  p-5
-                  shadow-2xl
-                "
-              >
-                {/* Fake window header */}
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-wider text-placeholder">
-                      Upcoming event
-                    </p>
-
-                    <h2 className="mt-1 text-lg font-semibold text-cream">
-                      Friday dinner
-                    </h2>
-                  </div>
-
-                  <div
-                    className="
-                      flex
-                      h-9
-                      w-9
-                      items-center
-                      justify-center
-                      rounded-lg
-                      bg-primary/10
-                      text-primary
-                    "
-                  >
-                    <CalendarDays size={17} />
-                  </div>
-                </div>
-
-                <div className="mt-6 space-y-3">
-                  <div className="flex items-center gap-3 rounded-lg bg-surface p-3">
-                    <div
-                      className="
-                        flex
-                        h-8
-                        w-8
-                        shrink-0
-                        items-center
-                        justify-center
-                        rounded-md
-                        bg-background
-                        text-primary
-                      "
-                    >
-                      <CalendarDays size={15} />
-                    </div>
-
-                    <div>
-                      <p className="text-xs text-placeholder">When</p>
-                      <p className="mt-0.5 text-sm text-cream">
-                        Friday, 28 August · 7:30 PM
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 rounded-lg bg-surface p-3">
-                    <div
-                      className="
-                        flex
-                        h-8
-                        w-8
-                        shrink-0
-                        items-center
-                        justify-center
-                        rounded-md
-                        bg-background
-                        text-primary
-                      "
-                    >
-                      <Users size={15} />
-                    </div>
-
-                    <div>
-                      <p className="text-xs text-placeholder">People</p>
-
-                      <p className="mt-0.5 text-sm text-cream">
-                        8 people invited
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 rounded-lg bg-surface p-3">
-                    <div
-                      className="
-                        flex
-                        h-8
-                        w-8
-                        shrink-0
-                        items-center
-                        justify-center
-                        rounded-md
-                        bg-background
-                        text-primary
-                      "
-                    >
-                      <Tags size={15} />
-                    </div>
-
-                    <div>
-                      <p className="text-xs text-placeholder">Type</p>
-
-                      <p className="mt-0.5 text-sm text-cream">
-                        Dinner · Friends
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-5 flex items-center justify-end border-t border-border pt-4">
-                  <span className="text-xs text-primary">View event</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-
-      <section id="features" className="border-y border-border bg-surface/40">
-        <div className="mx-auto max-w-7xl px-6 py-20 sm:py-24 lg:px-8">
-          <div className="max-w-2xl">
-            <p className="text-xs font-medium uppercase tracking-[0.18em] text-primary">
-              The basics, covered
-            </p>
-
-            <h2
-              className="
-                mt-4
-                max-w-lg
-                font-serif
-                text-4xl
-                font-semibold
-                tracking-tight
-                text-cream
-                sm:text-5xl
-              "
-            >
-              Everything you need.
+      {/* ── Hero ── */}
+      <section className="mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6 lg:px-8 lg:pt-24">
+        <div className="grid items-center gap-12 lg:grid-cols-[1fr_420px] lg:gap-16">
+          <div>
+            <h1 className="text-5xl font-bold leading-[1.08] tracking-tight text-foreground sm:text-6xl lg:text-[64px]">
+              Planning an event
               <br />
-              Nothing you don't.
-            </h2>
+              <span className="text-primary">just got easier.</span>
+            </h1>
 
-            <p className="mt-5 max-w-xl leading-7 text-muted">
-              Event Planner keeps the little details from getting scattered
-              across messages, notes, and calendars.
-            </p>
-          </div>
-
-          <div
-            className="
-              mt-12
-              grid
-              overflow-hidden
-              rounded-2xl
-              border
-              border-border
-              bg-border
-              sm:grid-cols-2
-              lg:grid-cols-3
-            "
-          >
-            <div className="bg-card">
-              <FeatureCard
-                icon={<CalendarDays size={19} />}
-                title="Create an event"
-                description="Add a name, date, time, location and the details people actually need."
-              />
-            </div>
-
-            <div className="bg-card">
-              <FeatureCard
-                icon={<Tags size={19} />}
-                title="Keep things organized"
-                description="Use tags to keep birthdays, work events and everything else easy to find."
-              />
-            </div>
-
-            <div className="bg-card">
-              <FeatureCard
-                icon={<Search size={19} />}
-                title="Find something to do"
-                description="Browse upcoming events and see what's happening around you."
-              />
-            </div>
-
-            <div className="bg-card">
-              <FeatureCard
-                icon={<Users size={19} />}
-                title="Share with people"
-                description="Make an event public or keep it private for the people you invite."
-              />
-            </div>
-
-            <div className="bg-card">
-              <FeatureCard
-                icon={<LockKeyhole size={19} />}
-                title="Control who sees it"
-                description="Decide whether your event should be visible to everyone or just your group."
-              />
-            </div>
-
-            <div className="bg-card">
-              <FeatureCard
-                icon={<CheckCircle2 size={19} />}
-                title="Keep it simple"
-                description="Everything stays in one place, so you don't have to remember where you put it."
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How it Works Section */}
-
-      <section id="how-it-works">
-        <div className="mx-auto max-w-7xl px-6 py-20 sm:py-24 lg:px-8">
-          <div className="max-w-2xl">
-            <p className="text-xs font-medium uppercase tracking-[0.18em] text-primary">
-              How it works
+            <p className="mt-6 max-w-lg text-lg leading-8 text-muted">
+              Create events, share the details, and let people RSVP — all
+              without the back-and-forth.
             </p>
 
-            <h2
-              className="
-                mt-4
-                max-w-xl
-                font-serif
-                text-4xl
-                font-semibold
-                tracking-tight
-                text-cream
-                sm:text-5xl
-              "
-            >
-              Three steps.
-              <br />
-              That's about it.
-            </h2>
-          </div>
-
-          <div className="mt-14 grid gap-12 md:grid-cols-3 md:gap-8">
-            <Step
-              number="01"
-              icon={<Plus size={17} />}
-              title="Create"
-              description="Give your event a name, pick a date and add the details."
-            />
-
-            <Step
-              number="02"
-              icon={<Tags size={17} />}
-              title="Organize"
-              description="Add a few tags and choose whether your event is public or private."
-            />
-
-            <Step
-              number="03"
-              icon={<Users size={17} />}
-              title="Share"
-              description="Send it to your people and everyone has the same details."
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Categories Section */}
-
-      <section id="categories" className="border-y border-border bg-surface/40">
-        <div className="mx-auto max-w-7xl px-6 py-20 sm:py-24 lg:px-8">
-          <div
-            className="
-              flex
-              flex-col
-              justify-between
-              gap-5
-              sm:flex-row
-              sm:items-end
-            "
-          >
-            <div>
-              <p className="text-xs font-medium uppercase tracking-[0.18em] text-primary">
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                to="/signup"
+                className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-[15px] font-semibold text-white transition-colors hover:bg-primary-hover"
+              >
+                Start for free
+                <ArrowRight size={16} />
+              </Link>
+              <Link
+                to="/events"
+                className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-5 py-2.5 text-[15px] font-medium text-muted transition-colors hover:border-border-hover hover:text-foreground"
+              >
                 Browse events
-              </p>
-
-              <h2
-                className="
-                  mt-4
-                  font-serif
-                  text-4xl
-                  font-semibold
-                  tracking-tight
-                  text-cream
-                  sm:text-5xl
-                "
-              >
-                What are you planning?
-              </h2>
+              </Link>
             </div>
+          </div>
 
+          {/* Preview card */}
+          <div className="mx-auto w-full max-w-sm lg:mx-0">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm shadow-black/5">
+              <div className="mb-5 flex items-start justify-between">
+                <div>
+                  <p className="text-xs font-medium text-placeholder uppercase tracking-wider">
+                    Friday · Aug 28
+                  </p>
+                  <h3 className="mt-1 text-lg font-semibold text-foreground">
+                    Dinner at Marco's
+                  </h3>
+                  <p className="mt-0.5 text-sm text-muted">
+                    Marco's Kitchen, Kathmandu
+                  </p>
+                </div>
+                <span className="rounded-lg border border-border bg-surface px-2.5 py-1 text-xs font-medium text-muted">
+                  Public
+                </span>
+              </div>
+
+              <div className="space-y-2.5">
+                <Row
+                  icon={<CalendarDays size={14} />}
+                  text="Friday, 28 Aug · 7:30 PM"
+                />
+                <Row icon={<Users size={14} />} text="8 going · 2 maybe" />
+                <Row icon={<Tags size={14} />} text="dinner · friends" />
+              </div>
+
+              <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
+                <div className="flex -space-x-2">
+                  {["A", "M", "S", "K"].map((l) => (
+                    <div
+                      key={l}
+                      className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-card bg-primary/15 text-[11px] font-semibold text-primary"
+                    >
+                      {l}
+                    </div>
+                  ))}
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-card bg-surface text-[10px] text-muted">
+                    +4
+                  </div>
+                </div>
+                <span className="text-xs font-medium text-primary">
+                  View details →
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Features ── */}
+      <section id="features" className="border-y border-border bg-card">
+        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8">
+          <div className="mb-12">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Everything you need.
+            </h2>
+            <p className="mt-3 max-w-lg text-base text-muted">
+              All the tools you need to plan and manage your event in one place.
+            </p>
+          </div>
+
+          <div className="grid gap-px rounded-2xl border border-border bg-border overflow-hidden sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                icon: <CalendarDays size={18} />,
+                title: "Create events fast",
+                desc: "Name, date, location. Done in under a minute.",
+              },
+              {
+                icon: <Tags size={18} />,
+                title: "Organise with tags",
+                desc: "Birthdays, workshops, dinners — keep them easy to find.",
+              },
+              {
+                icon: <Search size={18} />,
+                title: "Discover what's on",
+                desc: "Browse public events by type, tag, or date.",
+              },
+              {
+                icon: <LockKeyhole size={18} />,
+                title: "Public or private",
+                desc: "Visible to everyone, or just people you share the link with.",
+              },
+              {
+                icon: <Users size={18} />,
+                title: "RSVPs built in",
+                desc: "Going, maybe, not going — attendance at a glance.",
+              },
+              {
+                icon: <MapPin size={18} />,
+                title: "Your own dashboard",
+                desc: "Everything you've organised, upcoming and past.",
+              },
+            ].map(({ icon, title, desc }) => (
+              <div key={title} className="bg-card p-6">
+                <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  {icon}
+                </div>
+                <p className="text-[15px] font-semibold text-foreground">
+                  {title}
+                </p>
+                <p className="mt-1.5 text-sm leading-6 text-muted">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── How it works ── */}
+      <section id="how-it-works">
+        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8">
+          <h2 className="mb-14 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            Three steps.
+          </h2>
+
+          <div className="grid gap-10 md:grid-cols-3">
+            {[
+              {
+                n: "01",
+                title: "Create",
+                desc: "Give your event a name, date and anything else people need to know.",
+              },
+              {
+                n: "02",
+                title: "Organise",
+                desc: "Add tags and choose whether it's public or just for the people you invite.",
+              },
+              {
+                n: "03",
+                title: "Share",
+                desc: "Send the link. Everyone sees the same details in one place.",
+              },
+            ].map(({ n, title, desc }) => (
+              <div key={n} className="flex gap-5">
+                <span className="mt-1 font-mono text-xs font-medium text-placeholder">
+                  {n}
+                </span>
+                <div>
+                  <p className="text-base font-semibold text-foreground">
+                    {title}
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-muted">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Categories ── */}
+      <section id="categories" className="border-y border-border bg-card">
+        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8">
+          <div className="mb-10 flex items-end justify-between">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              What are you planning?
+            </h2>
             <Link
               to="/events"
-              className="
-                flex
-                w-fit
-                items-center
-                gap-1.5
-                text-sm
-                font-medium
-                text-primary
-                transition
-                hover:text-primary-hover
-              "
+              className="hidden items-center gap-1 text-sm text-muted hover:text-foreground sm:flex"
             >
-              See all events
-              <ChevronRight size={16} />
+              See all <ChevronRight size={15} />
             </Link>
           </div>
 
-          <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <Category
-              icon={<Cake size={19} />}
-              title="Birthdays"
-              description="Celebrate another year."
-            />
-
-            <Category
-              icon={<BriefcaseBusiness size={19} />}
-              title="Work"
-              description="Meet, learn and get things done."
-            />
-
-            <Category
-              icon={<Palette size={19} />}
-              title="Workshops"
-              description="Share ideas and learn something new."
-            />
-
-            <Category
-              icon={<Users size={19} />}
-              title="Get-togethers"
-              description="Make time for your people."
-            />
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                icon: <Cake size={17} />,
+                label: "Birthdays",
+                sub: "Celebrate another year.",
+              },
+              {
+                icon: <BriefcaseBusiness size={17} />,
+                label: "Work",
+                sub: "Meetings and team events.",
+              },
+              {
+                icon: <Palette size={17} />,
+                label: "Workshops",
+                sub: "Learn and share ideas.",
+              },
+              {
+                icon: <Users size={17} />,
+                label: "Get-togethers",
+                sub: "Make time for people.",
+              },
+            ].map(({ icon, label, sub }) => (
+              <Link
+                key={label}
+                to="/events"
+                className="group flex items-center gap-4 rounded-xl border border-border bg-background px-5 py-4 transition-colors hover:border-border-hover hover:bg-surface"
+              >
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary/15">
+                  {icon}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground">
+                    {label}
+                  </p>
+                  <p className="text-xs text-muted">{sub}</p>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
-      {/* Footer Section */}
 
-      <footer className="border-t border-border bg-surface/40">
-        <div className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
-          <div
-            className="
-              flex
-              flex-col
-              justify-between
-              gap-8
-              sm:flex-row
-              sm:items-center
-            "
-          >
-            <div>
-              <Link to="/" className="flex items-center gap-3">
-                <div
-                  className="
-                    flex
-                    h-8
-                    w-8
-                    items-center
-                    justify-center
-                    rounded-lg
-                    bg-primary/10
-                    text-primary
-                  "
-                >
-                  <CalendarDays size={16} />
-                </div>
-
-                <span className="font-serif font-semibold text-cream">
-                  Event Planner
-                </span>
-              </Link>
-
-              <p className="mt-2 text-xs text-muted">
-                Keep plans in one place.
-              </p>
+      {/* ── Footer ── */}
+      <footer>
+        <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-white">
+                <CalendarDays size={13} />
+              </div>
+              <span className="text-sm font-semibold text-foreground">
+                Gathered
+              </span>
             </div>
 
-            <div className="flex flex-wrap gap-x-7 gap-y-3 text-xs text-muted">
-              <a href="#features" className="transition hover:text-cream">
+            <div className="flex flex-wrap gap-5 text-xs text-placeholder">
+              <a href="#features" className="hover:text-muted">
                 Features
               </a>
-
-              <a href="#how-it-works" className="transition hover:text-cream">
+              <a href="#how-it-works" className="hover:text-muted">
                 How it works
               </a>
-
-              <Link to="/events" className="transition hover:text-cream">
+              <Link to="/events" className="hover:text-muted">
                 Events
               </Link>
-
-              <Link to="/login" className="transition hover:text-cream">
+              <Link to="/login" className="hover:text-muted">
                 Sign in
               </Link>
-
-              <Link to="/signup" className="transition hover:text-cream">
+              <Link to="/signup" className="hover:text-muted">
                 Sign up
               </Link>
             </div>
           </div>
 
-          <div className="mt-8 border-t border-border pt-6 text-xs text-placeholder">
-            © {new Date().getFullYear()} Event Planner
-          </div>
+          <p className="mt-8 border-t border-border pt-6 text-xs text-placeholder">
+            © {new Date().getFullYear()} Gathered
+          </p>
         </div>
       </footer>
+    </div>
+  );
+}
+
+function Row({ icon, text }: { icon: React.ReactNode; text: string }) {
+  return (
+    <div className="flex items-center gap-2.5 text-sm text-muted">
+      <span className="shrink-0 text-placeholder">{icon}</span>
+      {text}
     </div>
   );
 }

@@ -1,480 +1,189 @@
-import type React from "react";
-
 import { Link } from "react-router-dom";
-import {
-  ArrowRight,
-  CalendarDays,
-  CheckCircle2,
-  LockKeyhole,
-  Mail,
-  Users,
-} from "lucide-react";
-
-import Button from "../components/ui/Button";
+import { ArrowRight, LockKeyhole, Mail } from "lucide-react";
 import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
 import { useLoginViewModel } from "../viewModels/useLoginViewModel";
 
+function BrandIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect
+        x="2"
+        y="4"
+        width="16"
+        height="14"
+        rx="3"
+        fill="currentColor"
+        opacity="0.2"
+      />
+      <rect
+        x="2"
+        y="4"
+        width="16"
+        height="14"
+        rx="3"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <path d="M2 8h16" stroke="currentColor" strokeWidth="1.5" />
+      <path
+        d="M7 2v3M13 2v3"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <circle cx="14" cy="14" r="1.5" fill="currentColor" />
+    </svg>
+  );
+}
+
 export default function LoginPage() {
-  const viewModel = useLoginViewModel();
+  const vm = useLoginViewModel();
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div
-          className="
-            absolute
-            -right-48
-            -top-48
-            h-150
-            w-150
-            rounded-full
-            bg-primary/[0.035]
-            blur-3xl
-          "
-        />
+    <div className="flex min-h-screen bg-background">
+      {/* Left panel */}
+      <div className="hidden w-[42%] shrink-0 flex-col justify-between bg-primary p-10 lg:flex xl:p-14">
+        <Link to="/" className="flex items-center gap-2.5 text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20">
+            <BrandIcon />
+          </div>
+          <span className="text-[15px] font-semibold">Gathered</span>
+        </Link>
 
-        <div
-          className="
-            absolute
-            -bottom-48
-            -left-48
-            h-150
-            w-150
-            rounded-full
-            bg-secondary/10
-            blur-3xl
-          "
-        />
+        <div>
+          <h1 className="text-4xl font-bold leading-tight text-white xl:text-5xl">
+            Welcome back.
+          </h1>
+          <p className="mt-4 max-w-xs text-base leading-7 text-white/70">
+            Your events are waiting. Pick up where you left off.
+          </p>
+        </div>
 
-        <div
-          className="
-            absolute
-            left-[18%]
-            top-[25%]
-            h-2
-            w-2
-            rounded-full
-            bg-primary/30
-          "
-        />
-
-        <div
-          className="
-            absolute
-            right-[15%]
-            top-[30%]
-            h-1.5
-            w-1.5
-            rounded-full
-            bg-secondary/30
-          "
-        />
+        <p className="text-sm text-white/50">
+          No account?{" "}
+          <Link
+            to="/signup"
+            className="text-white/80 underline-offset-2 hover:underline"
+          >
+            Create one
+          </Link>
+        </p>
       </div>
 
-      {/* navbar section */}
-
-      <header className="relative z-20">
-        <div
-          className="
-            mx-auto
-            flex
-            h-18
-            max-w-7xl
-            items-center
-            justify-between
-            px-6
-            lg:px-8
-          "
-        >
-          <Link to="/" className="flex items-center gap-3">
-            <div
-              className="
-                flex
-                h-10
-                w-10
-                items-center
-                justify-center
-                rounded-xl
-                border
-                border-primary/20
-                bg-primary/10
-                text-primary
-              "
-            >
-              <CalendarDays size={21} strokeWidth={1.7} />
+      {/* Right panel */}
+      <div className="flex flex-1 flex-col bg-background">
+        {/* Mobile header */}
+        <div className="flex items-center justify-between border-b border-border px-5 py-4 lg:hidden">
+          <Link
+            to="/"
+            className="flex items-center gap-2 text-sm font-semibold text-foreground"
+          >
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-white">
+              <BrandIcon />
             </div>
-
-            <span
-              className="
-                font-serif
-                text-xl
-                font-semibold
-                tracking-tight
-                text-cream
-              "
-            >
-              Event Planner
-            </span>
+            Gathered
           </Link>
-
-          <div className="flex items-center gap-3">
-            <span className="hidden text-sm text-muted sm:block">
-              Don't have an account?
-            </span>
-
-            <Link
-              to="/signup"
-              className="
-                rounded-xl
-                border
-                border-border
-                bg-card
-                px-4
-                py-2.5
-                text-sm
-                font-medium
-                text-cream
-                transition
-                hover:border-primary/30
-                hover:bg-card-hover
-              "
-            >
-              Sign up
-            </Link>
-          </div>
+          <Link
+            to="/signup"
+            className="text-sm text-muted hover:text-foreground"
+          >
+            Sign up
+          </Link>
         </div>
-      </header>
 
-      {/* Main container */}
+        {/* Form */}
+        <div className="flex flex-1 items-center justify-center px-5 py-12">
+          <div className="w-full max-w-90">
+            <h2 className="text-2xl font-bold text-foreground">Sign in</h2>
+            <p className="mt-1.5 text-sm text-muted">
+              Enter your email and password to continue.
+            </p>
 
-      <main
-        className="
-          relative
-          z-10
-          flex
-          min-h-[calc(100vh-72px)]
-          items-center
-          px-6
-          py-12
-          lg:px-8
-        "
-      >
-        <div
-          className="
-            mx-auto
-            grid
-            w-full
-            max-w-6xl
-            items-center
-            gap-16
-            lg:grid-cols-[1fr_460px]
-            lg:gap-20
-          "
-        >
-          {/* Left Section */}
-
-          <section className="hidden lg:block">
-            <div className="max-w-xl">
-              <h1
-                className="
-                  font-serif
-                  text-5xl
-                  font-semibold
-                  leading-[1.04]
-                  tracking-tight
-                  text-cream
-                  xl:text-6xl
-                "
-              >
-                Welcome
-                <br />
-                <span className="text-primary">back.</span>
-              </h1>
-
-              <p
-                className="
-                  mt-7
-                  max-w-md
-                  text-base
-                  leading-7
-                  text-muted
-                "
-              >
-                Pick up where you left off. Manage your events, discover new
-                gatherings, and keep everything organized in one place.
-              </p>
-            </div>
-
-            <div className="mt-14 space-y-5">
-              <Feature
-                icon={<CalendarDays size={18} />}
-                title="Manage your events"
-                description="Create, edit, and organize your events from one place."
-              />
-
-              <Feature
-                icon={<Users size={18} />}
-                title="Bring people together"
-                description="Discover events and connect with your community."
-              />
-
-              <Feature
-                icon={<CheckCircle2 size={18} />}
-                title="Stay organized"
-                description="Keep dates, locations, tags, and details easy to find."
-              />
-            </div>
-          </section>
-          {/* Login Card section */}
-          <section>
-            <div
-              className="
-                w-full
-                rounded-2xl
-                border
-                border-border
-                bg-card
-                p-7
-                shadow-2xl
-                shadow-black/20
-                sm:p-9
-              "
-            >
-              <div className="mb-8">
-                <div
-                  className="
-                    mb-5
-                    flex
-                    h-11
-                    w-11
-                    items-center
-                    justify-center
-                    rounded-xl
-                    bg-primary/10
-                    text-primary
-                  "
-                >
-                  <LockKeyhole size={21} strokeWidth={1.7} />
-                </div>
-
-                <h2
-                  className="
-                    font-serif
-                    text-3xl
-                    font-semibold
-                    tracking-tight
-                    text-cream
-                  "
-                >
-                  Sign in
-                </h2>
-
-                <p className="mt-2 text-sm leading-6 text-muted">
-                  Welcome back. Enter your details below to continue.
-                </p>
+            {vm.justRegistered && (
+              <div className="mt-5 rounded-xl border border-success/25 bg-success-bg px-4 py-3 text-sm text-success">
+                Account created — you can sign in now.
               </div>
+            )}
 
-              {viewModel.justRegistered && (
-                <div
-                  className="
-                    mb-6
-                    flex
-                    items-start
-                    gap-3
-                    rounded-xl
-                    border
-                    border-primary/20
-                    bg-primary/10
-                    px-4
-                    py-3
-                    text-sm
-                    text-primary
-                  "
-                >
-                  <CheckCircle2 size={18} className="mt-0.5 shrink-0" />
-
-                  <div>
-                    <p className="font-medium">Account created</p>
-
-                    <p className="mt-0.5 text-xs text-primary/70">
-                      You can now sign in to your account.
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {viewModel.serverError && (
-                <div
-                  role="alert"
-                  className="
-                    mb-6
-                    rounded-xl
-                    border
-                    border-danger/20
-                    bg-danger-bg
-                    px-4
-                    py-3
-                    text-sm
-                    text-danger
-                  "
-                >
-                  {viewModel.serverError}
-                </div>
-              )}
-
-              <form
-                onSubmit={viewModel.handleSubmit}
-                noValidate
-                className="space-y-5"
+            {vm.serverError && (
+              <div
+                role="alert"
+                className="mt-5 rounded-xl border border-danger/25 bg-danger-bg px-4 py-3 text-sm text-danger"
               >
-                <Input
-                  label="Email address"
-                  name="email"
-                  type="email"
-                  icon={<Mail size={18} strokeWidth={1.8} />}
-                  autoComplete="email"
-                  value={viewModel.form.email}
-                  onChange={(e) =>
-                    viewModel.handleFieldChange("email", e.target.value)
-                  }
-                  error={viewModel.fieldErrors.email}
-                  placeholder="you@example.com"
-                />
+                {vm.serverError}
+              </div>
+            )}
 
+            <form
+              onSubmit={vm.handleSubmit}
+              noValidate
+              className="mt-7 space-y-4"
+            >
+              <Input
+                label="Email address"
+                name="email"
+                type="email"
+                autoComplete="email"
+                placeholder="you@example.com"
+                icon={<Mail size={16} />}
+                value={vm.form.email}
+                onChange={(e) => vm.handleFieldChange("email", e.target.value)}
+                error={vm.fieldErrors.email}
+              />
+
+              <div>
                 <Input
                   label="Password"
                   name="password"
                   type="password"
-                  icon={<LockKeyhole size={18} strokeWidth={1.8} />}
                   autoComplete="current-password"
-                  value={viewModel.form.password}
-                  onChange={(e) =>
-                    viewModel.handleFieldChange("password", e.target.value)
-                  }
-                  error={viewModel.fieldErrors.password}
                   placeholder="••••••••"
+                  icon={<LockKeyhole size={16} />}
+                  value={vm.form.password}
+                  onChange={(e) =>
+                    vm.handleFieldChange("password", e.target.value)
+                  }
+                  error={vm.fieldErrors.password}
                 />
-
-                <div className="flex justify-end">
+                <div className="mt-2 flex justify-end">
                   <Link
                     to="/forgot-password"
-                    className="
-                      text-xs
-                      font-medium
-                      text-primary
-                      transition
-                      hover:text-primary-hover
-                    "
+                    className="text-xs text-muted hover:text-foreground"
                   >
                     Forgot password?
                   </Link>
                 </div>
-                <Button
-                  type="submit"
-                  isLoading={viewModel.isSubmitting}
-                  className="
-                    group
-                    w-full
-                    rounded-xl!
-                    bg-primary!
-                    py-3.5!
-                    text-[#10130B]!
-                    shadow-lg
-                    shadow-primary/10
-                    transition-all
-                    hover:bg-primary-hover!
-                    hover:shadow-primary/20
-                  "
-                >
-                  <span className="flex items-center justify-center gap-2">
-                    Sign in
-                    <ArrowRight
-                      size={17}
-                      strokeWidth={1.8}
-                      className="
-                        transition-transform
-                        group-hover:translate-x-0.5
-                      "
-                    />
-                  </span>
-                </Button>
-              </form>
-
-              {/* Divider */}
-              <div className="my-7 flex items-center gap-4">
-                <div className="h-px flex-1 bg-border" />
-
-                <span className="text-[10px] font-medium tracking-wider text-placeholder">
-                  OR
-                </span>
-
-                <div className="h-px flex-1 bg-border" />
               </div>
 
-              <p className="mt-7 text-center text-sm text-muted">
-                Don't have an account?{" "}
-                <Link
-                  to="/signup"
-                  className="
-                    font-medium
-                    text-primary
-                    transition
-                    hover:text-primary-hover
-                  "
-                >
-                  Create one
-                </Link>
-              </p>
+              <Button
+                type="submit"
+                isLoading={vm.isSubmitting}
+                size="lg"
+                className="mt-1 w-full"
+                rightIcon={<ArrowRight size={16} />}
+              >
+                Sign in
+              </Button>
+            </form>
 
-              <p className="mt-5 text-center text-[11px] leading-5 text-placeholder">
-                By continuing, you agree to our terms of service and privacy
-                policy.
-              </p>
-            </div>
-          </section>
+            <p className="mt-6 text-center text-sm text-muted">
+              No account?{" "}
+              <Link
+                to="/signup"
+                className="font-medium text-primary hover:text-primary-hover"
+              >
+                Create one for free
+              </Link>
+            </p>
+          </div>
         </div>
-      </main>
-    </div>
-  );
-}
-
-// Features Component
-
-function Feature({
-  icon,
-  title,
-  description,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="flex items-start gap-4">
-      <div
-        className="
-          flex
-          h-10
-          w-10
-          shrink-0
-          items-center
-          justify-center
-          rounded-xl
-          border
-          border-primary/10
-          bg-primary/10
-          text-primary
-        "
-      >
-        {icon}
-      </div>
-
-      <div>
-        <p className="text-sm font-medium text-cream">{title}</p>
-
-        <p className="mt-1 max-w-xs text-xs leading-5 text-muted">
-          {description}
-        </p>
       </div>
     </div>
   );

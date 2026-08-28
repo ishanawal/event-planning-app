@@ -2,13 +2,9 @@ import React from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
-
   variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
-
   size?: "sm" | "md" | "lg";
-
   leftIcon?: React.ReactNode;
-
   rightIcon?: React.ReactNode;
 }
 
@@ -24,101 +20,26 @@ export default function Button({
   type = "button",
   ...props
 }: ButtonProps) {
-  const base = `
-  group
-  box-border
-  inline-flex
-  items-center
-  justify-center
-  gap-2
-  rounded-xl
-  font-medium
-  transition-all
-  duration-200
-  ease-out
-
-  focus:outline-none
-  focus:ring-2
-  focus:ring-primary/40
-  focus:ring-offset-2
-  focus:ring-offset-background
-
-  disabled:cursor-not-allowed
-  disabled:opacity-50
-  disabled:hover:translate-y-0
-  disabled:hover:shadow-none
-`;
+  const base =
+    "inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl font-medium transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background disabled:cursor-not-allowed disabled:opacity-40";
 
   const sizes = {
-    sm: "px-3 py-2 text-xs",
-    md: "px-4 py-2.5 text-sm",
-    lg: "px-6 py-3.5 text-sm",
+    sm: "h-8 px-3.5 text-xs",
+    md: "h-9 px-4 text-sm",
+    lg: "h-10 px-5 text-sm",
   };
 
   const variants = {
-    primary: `
-    bg-primary
-    text-[#10130B]
-    shadow-sm
-
-    hover:-translate-y-0.5
-    hover:bg-primary-hover
-    hover:shadow-lg
-    hover:shadow-primary/15
-
-    active:translate-y-0
-    active:scale-[0.98]
-  `,
-
-    secondary: `
-    bg-secondary
-    text-foreground
-    shadow-sm
-
-    hover:-translate-y-0.5
-    hover:bg-secondary-hover
-    hover:shadow-md
-
-    active:translate-y-0
-    active:scale-[0.98]
-  `,
-    outline: `
-  border
-  border-border
-  bg-transparent
-  text-foreground
-
-  hover:-translate-y-0.5
-  hover:border-border-hover
-  hover:bg-card
-  hover:shadow-md
-
-  active:translate-y-0
-  active:scale-[0.98]
-`,
-    ghost: `
-    bg-transparent
-    text-muted
-
-    hover:bg-card
-    hover:text-cream
-
-    active:scale-[0.98]
-  `,
-
-    danger: `
-    bg-danger
-    text-white
-    shadow-sm
-
-    hover:-translate-y-0.5
-    hover:bg-danger/90
-    hover:shadow-lg
-    hover:shadow-danger/15
-
-    active:translate-y-0
-    active:scale-[0.98]
-  `,
+    primary:
+      "bg-primary text-white shadow-sm shadow-primary/20 hover:bg-primary-hover active:bg-primary-active",
+    secondary:
+      "bg-secondary text-foreground border border-border hover:bg-secondary-hover",
+    outline:
+      "border border-border bg-transparent text-foreground hover:bg-surface hover:border-border-hover",
+    ghost:
+      "bg-transparent text-muted hover:text-foreground hover:bg-surface",
+    danger:
+      "bg-danger-bg border border-danger/30 text-danger hover:bg-danger/10",
   };
 
   return (
@@ -132,26 +53,11 @@ export default function Button({
       {isLoading ? (
         <Spinner />
       ) : (
-        leftIcon && (
-          <span className="shrink-0 transition-transform duration-200 group-hover:-translate-x-0.5">
-            {leftIcon}
-          </span>
-        )
+        leftIcon && <span className="shrink-0">{leftIcon}</span>
       )}
-
       <span>{children}</span>
-
       {!isLoading && rightIcon && (
-        <span
-          className="
-            shrink-0
-            transition-transform
-            duration-200
-            group-hover:translate-x-1
-          "
-        >
-          {rightIcon}
-        </span>
+        <span className="shrink-0">{rightIcon}</span>
       )}
     </button>
   );
@@ -166,20 +72,8 @@ function Spinner() {
       viewBox="0 0 24 24"
       aria-hidden="true"
     >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
-
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-      />
+      <circle className="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v3a5 5 0 00-5 5H4z" />
     </svg>
   );
 }

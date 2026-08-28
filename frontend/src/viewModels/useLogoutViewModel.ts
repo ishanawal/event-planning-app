@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../store/authStore";
 import { useMutation } from "@tanstack/react-query";
+
+import { useAuthStore } from "../store/authStore";
 import * as authApi from "../api/auth.api";
+
 export interface LogoutViewModel {
   isLoggedOut: boolean;
   logout: () => void;
@@ -9,12 +11,13 @@ export interface LogoutViewModel {
 
 export function useLogoutViewModel(): LogoutViewModel {
   const navigate = useNavigate();
-  const setUser = useAuthStore((s) => s.setUser);
+  const { clearAuth } = useAuthStore();
 
   const mutation = useMutation({
     mutationFn: authApi.logout,
-    onSuccess: () => {
-      setUser(null);
+
+    onSettled: () => {
+      clearAuth();
       navigate("/", { replace: true });
     },
   });

@@ -42,11 +42,17 @@ apiClient.interceptors.response.use(
   (res) => res,
   async (error) => {
     const original = error.config as typeof error.config & { _retry?: boolean };
+    const authEndpoints = [
+      "/auth/login",
+      "/auth/signup",
+      "/auth/refresh",
+      "/auth/logout",
+    ];
 
     if (
       error.response?.status !== 401 ||
       original._retry ||
-      original.url === "/auth/refresh"
+      authEndpoints.includes(original.url ?? "")
     ) {
       return Promise.reject(error);
     }
