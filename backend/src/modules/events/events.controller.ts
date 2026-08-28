@@ -9,7 +9,11 @@ export async function listEvents(
 ): Promise<void> {
   try {
     const query = res.locals.validated.query as ListEventsQuery;
-    const result = await eventsService.listEvents(query);
+    const result = await eventsService.listEvents(
+      query,
+      "all",
+      req.user?.userId,
+    );
     res.json({
       success: true,
       ...result,
@@ -26,7 +30,11 @@ export async function listUpcomingEvents(
 ): Promise<void> {
   try {
     const query = res.locals.validated.query as ListEventsQuery;
-    const result = await eventsService.listEvents(query, "upcoming");
+    const result = await eventsService.listEvents(
+      query,
+      "upcoming",
+      req.user?.userId,
+    );
     res.json({
       success: true,
       ...result,
@@ -43,7 +51,11 @@ export async function listPastEvents(
 ): Promise<void> {
   try {
     const query = res.locals.validated.query as ListEventsQuery;
-    const result = await eventsService.listEvents(query, "past");
+    const result = await eventsService.listEvents(
+      query,
+      "past",
+      req.user?.userId,
+    );
     res.json({
       success: true,
       ...result,
@@ -59,7 +71,10 @@ export async function getEvent(
   next: NextFunction,
 ): Promise<void> {
   try {
-    const event = await eventsService.getEventsById(Number(req.params.id));
+    const event = await eventsService.getEventsById(
+      Number(req.params.id),
+      req.user?.userId,
+    );
     res.json({
       success: true,
       data: { event },

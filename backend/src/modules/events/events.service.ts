@@ -52,6 +52,7 @@ async function validateTagIds(tagIds: number[]): Promise<void> {
 export async function listEvents(
   query: ListEventsQuery,
   filter: EventFilter = "all",
+  currentUserId?: number,
 ) {
   const { page, limit, type, tags, search, sortBy, order, creator_id } = query;
   const offset = (page - 1) * limit;
@@ -71,6 +72,8 @@ export async function listEvents(
       "events.updated_at",
       "users.name as creator_name",
     );
+
+  baseQuery = applyEventVisibility(baseQuery, currentUserId);
 
   // Filtering by upcoming or past
   if (filter === "upcoming") {
@@ -123,7 +126,8 @@ export async function listEvents(
   }
 
   // Count total matching rows for pagination
-  const countQuery = db("events").count("events.id as count");
+  let countQuery = db("events").count("events.id as count");
+  countQuery = applyEventVisibility(countQuery, currentUserId);
 
   if (filter === "upcoming") countQuery.where("events.event_date", ">=", now);
   if (filter === "past") countQuery.where("events.event_date", "<", now);
@@ -161,10 +165,20 @@ export async function listEvents(
   };
 }
 
-export async function getEventsById(id: number) {
-  const event = await db("events")
+export async function getEventsById(id: number, currentUserId?: number) {
+  const query = db("events")
     .join("users", "events.creator_id", "users.id")
-    .where("events.id", id)
+    .where("events.id", id);
+
+  query.andWhere((qb) => {
+    qb.where("events.type", "public");
+
+    if (currentUserId !== undefined) {
+      qb.orWhere("events.creator_id", currentUserId);
+    }
+  });
+
+  const event = await query
     .select("events.*", "users.name as creator_name")
     .first<DbEvent & { creator_name: string }>();
 
@@ -174,7 +188,10 @@ export async function getEventsById(id: number) {
 
   const tagsMap = await fetchTagsForEvents([id]);
 
-  return { ...event, tags: tagsMap[id] || [] };
+  return {
+    ...event,
+    tags: tagsMap[id] || [],
+  };
 }
 
 export async function createEvent(data: CreateEventBody, creatorId: number) {
@@ -299,4 +316,17 @@ export async function deleteEvent(id: number, userId: number) {
     eventId: id,
     userId,
   });
+}
+
+function applyEventVisibility(query: any, currentUserId?: number) {
+  if (currentUserId !== undefined) {
+    return query.where((qb: any) => {
+      qb.where("events.type", "public").orWhere(
+        "events.creator_id",
+        currentUserId,
+      );
+    });
+  }
+
+  return query.where("events.type", "public");
 }

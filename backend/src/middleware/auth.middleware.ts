@@ -4,7 +4,7 @@ import { verifyAccessToken } from "../utils/jwt";
 declare global {
   namespace Express {
     interface Request {
-      user?: { userId: number; email: string };
+      user?: { userId: number; email: string; name: string };
     }
   }
 }
