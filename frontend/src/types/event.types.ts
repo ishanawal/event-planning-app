@@ -1,10 +1,17 @@
 import type { ApiSuccess } from "./auth.types";
+import type { Tag } from "./tags.types";
 
 export interface Meta {
   page: number;
   limit: number;
   total: number;
   totalPages: number;
+}
+
+export interface RsvpSummary {
+  yes: number;
+  no: number;
+  maybe: number;
 }
 
 export interface Event {
@@ -14,9 +21,10 @@ export interface Event {
   location: string;
   event_date: string;
   type: EventTypes;
-  creator_id: string;
+  creator_id: number;
   creator_name: string;
-  tags: string[];
+  tags: Tag[];
+  rsvps: RsvpSummary;
   created_at: string;
   updated_at: string;
 }

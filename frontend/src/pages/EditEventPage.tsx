@@ -13,6 +13,7 @@ import Button from "../components/ui/Button";
 import { useEditEventViewModel } from "../viewModels/useEditEventViewModel";
 import { useTagsViewModel } from "../viewModels/useTagsViewModel";
 import { getMinDateTime } from "../utils/getMinDateTime";
+import { TagChip } from "../components/common/TagChip";
 
 export default function EditEventPage() {
   const { id } = useParams<{ id: string }>();
@@ -168,10 +169,11 @@ export default function EditEventPage() {
                   {tagsVM.tags.map((tag) => {
                     const sel = (vm.form.tag_ids ?? []).includes(tag.id);
                     return (
-                      <button
+                      <TagChip
                         key={tag.id}
-                        type="button"
-                        onClick={() => {
+                        tag={tag}
+                        isSelected={sel}
+                        toggleTag={() => () => {
                           const cur = vm.form.tag_ids ?? [];
                           vm.updateField(
                             "tag_ids",
@@ -180,15 +182,7 @@ export default function EditEventPage() {
                               : [...cur, tag.id],
                           );
                         }}
-                        className={[
-                          "rounded-xl border px-3 py-1 text-xs font-medium transition-colors",
-                          sel
-                            ? "border-primary/30 bg-primary/8 text-primary"
-                            : "border-border text-muted hover:border-border-hover hover:text-foreground",
-                        ].join(" ")}
-                      >
-                        {tag.name}
-                      </button>
+                      />
                     );
                   })}
                 </div>
@@ -205,6 +199,7 @@ export default function EditEventPage() {
                 type="submit"
                 isLoading={vm.isSubmitting}
                 className="flex-1"
+                size="lg"
               >
                 Save changes
               </Button>

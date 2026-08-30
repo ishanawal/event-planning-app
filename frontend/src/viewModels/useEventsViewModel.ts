@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import type { EventTypes, Meta, OrderDir, Event } from "../types/event.types";
-import { getEvents } from "../api/event.api";
+import { getEvents, deleteEvent as deleteEventById } from "../api/event.api";
 import { extractServerError } from "../utils/extractErrors";
+import { useAuthStore } from "../store/authStore";
 
 type EventFilter = "all" | "upcoming" | "past";
 
@@ -23,8 +24,8 @@ const DEFAULT_FILTERS: EventFilters = {
   search: "",
   type: undefined,
   tags: [],
-  sortBy: "event_date",
-  order: "asc",
+  sortBy: "created_at",
+  order: "desc",
   creatorId: undefined,
   filter: "all",
 };
@@ -38,8 +39,9 @@ export function useEventsViewModel(options?: UseEventsViewModelOptions) {
   });
   const [page, setPage] = useState(1);
   const limit = 10;
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const isHydrated = useAuthStore((s) => s.isHydrated);
 
   const fetchEvents = useCallback(async () => {
     try {
@@ -77,9 +79,29 @@ export function useEventsViewModel(options?: UseEventsViewModelOptions) {
     }
   }, [page, filters]);
 
+  const deleteEvent = useCallback(
+    async (id: number) => {
+      try {
+        setError(null);
+
+        await deleteEventById(id);
+
+        setEvents((current) => current.filter((event) => event.id !== id));
+
+        await fetchEvents();
+      } catch (err) {
+        const message = extractServerError(err);
+        setError(message);
+        throw err;
+      }
+    },
+    [fetchEvents],
+  );
+
   useEffect(() => {
+    if (!isHydrated) return;
     fetchEvents();
-  }, [fetchEvents]);
+  }, [fetchEvents, isHydrated]);
 
   const setSearch = useCallback((search: string) => {
     setPage(1);
@@ -127,6 +149,7 @@ export function useEventsViewModel(options?: UseEventsViewModelOptions) {
     isLoading,
     error,
     fetchEvents,
+    deleteEvent,
     setSearch,
     setType,
     setTags,

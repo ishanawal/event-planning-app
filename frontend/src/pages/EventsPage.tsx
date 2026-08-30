@@ -1,12 +1,14 @@
-import { useState, useCallback, useRef } from "react";
-import { Link } from "react-router-dom";
-import { CalendarDays, Clock3, MapPin, Search, X } from "lucide-react";
+import { useState, useCallback, useRef, useEffect } from "react";
+import { CalendarDays, Search, X } from "lucide-react";
 import Navbar from "../components/layout/Navbar";
 import { useEventsViewModel } from "../viewModels/useEventsViewModel";
-import type { Event, EventTypes } from "../types/event.types";
+import type { EventTypes } from "../types/event.types";
+import { EventCard } from "../components/common/EventCard";
+import { useTagsViewModel } from "../viewModels/useTagsViewModel";
 
 export default function EventsPage() {
   const vm = useEventsViewModel();
+  const tagsVM = useTagsViewModel();
   const [searchInput, setSearchInput] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -19,7 +21,8 @@ export default function EventsPage() {
     [vm],
   );
 
-  const hasFilters = !!vm.filters.search || !!vm.filters.type;
+  const hasFilters =
+    !!vm.filters.search || !!vm.filters.type || vm.filters.tags.length > 0;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -73,7 +76,35 @@ export default function EventsPage() {
             <option value="public">Public</option>
             <option value="private">Private</option>
           </select>
+          <div className="relative">
+            <select
+              value=""
+              onChange={(e) => {
+                const tagName = e.target.value;
 
+                if (!tagName) return;
+
+                if (vm.filters.tags.includes(tagName)) {
+                  return;
+                }
+
+                vm.setTags([...vm.filters.tags, tagName]);
+              }}
+              className="rounded-xl border border-border bg-card px-3.5 py-3 text-sm text-foreground focus:border-primary/50 focus:outline-none"
+            >
+              <option value="">Filter by tag</option>
+
+              {tagsVM.tags.map((tag) => (
+                <option
+                  key={tag.id}
+                  value={tag.name}
+                  disabled={vm.filters.tags.includes(tag.name)}
+                >
+                  {tag.name}
+                </option>
+              ))}
+            </select>
+          </div>
           <select
             value={`${vm.filters.sortBy}_${vm.filters.order}`}
             onChange={(e) => {
@@ -102,7 +133,23 @@ export default function EventsPage() {
             </button>
           )}
         </div>
-
+        {vm.filters.tags.length > 0 && (
+          <div className="mb-6 flex flex-wrap gap-2">
+            {vm.filters.tags.map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                onClick={() =>
+                  vm.setTags(vm.filters.tags.filter((t) => t !== tag))
+                }
+                className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/15"
+              >
+                {tag}
+                <X size={12} />
+              </button>
+            ))}
+          </div>
+        )}
         {vm.isLoading ? (
           <SkeletonGrid />
         ) : vm.error ? (
@@ -161,85 +208,6 @@ export default function EventsPage() {
         )}
       </main>
     </div>
-  );
-}
-
-function EventCard({ event }: { event: Event }) {
-  const date = new Date(event.event_date);
-  const isPast = date < new Date();
-
-  return (
-    <Link
-      to={`/events/${event.id}`}
-      className="group flex flex-col rounded-2xl border border-border bg-card p-5 transition-colors hover:border-border-hover hover:bg-card-hover"
-    >
-      <div className="mb-4 flex items-start gap-3.5">
-        <div className="flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-xl border border-border bg-surface">
-          <span className="text-[10px] font-medium uppercase leading-none text-muted">
-            {date.toLocaleDateString("en-US", { month: "short" })}
-          </span>
-          <span className="mt-0.5 text-lg font-bold leading-tight text-foreground">
-            {date.getDate()}
-          </span>
-        </div>
-        <div className="min-w-0 flex-1 pt-0.5">
-          <div className="flex items-center gap-2">
-            <h3 className="truncate text-[15px] font-semibold text-foreground transition-colors group-hover:text-primary">
-              {event.title}
-            </h3>
-            {isPast && (
-              <span className="shrink-0 rounded-lg border border-border px-2 py-0.5 text-[11px] text-placeholder">
-                Past
-              </span>
-            )}
-          </div>
-          {event.description && (
-            <p className="mt-0.5 line-clamp-1 text-sm text-muted">
-              {event.description}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-auto space-y-1.5 border-t border-border pt-3.5">
-        <div className="flex items-center gap-2 text-xs text-muted">
-          <Clock3 size={12} />
-          {date.toLocaleTimeString("en-US", {
-            hour: "numeric",
-            minute: "2-digit",
-          })}
-          <span className="opacity-40">·</span>
-          {date.toLocaleDateString("en-US", {
-            weekday: "short",
-            month: "short",
-            day: "numeric",
-          })}
-        </div>
-        {event.location && (
-          <div className="flex items-center gap-2 text-xs text-muted">
-            <MapPin size={12} />
-            <span className="truncate">{event.location}</span>
-          </div>
-        )}
-        {event.tags?.length > 0 && (
-          <div className="flex flex-wrap gap-1 pt-0.5">
-            {event.tags.slice(0, 3).map((t) => (
-              <span
-                key={t}
-                className="rounded-lg bg-primary/8 px-2 py-0.5 text-[11px] font-medium text-primary"
-              >
-                {t}
-              </span>
-            ))}
-            {event.tags.length > 3 && (
-              <span className="text-[11px] text-placeholder">
-                +{event.tags.length - 3}
-              </span>
-            )}
-          </div>
-        )}
-      </div>
-    </Link>
   );
 }
 

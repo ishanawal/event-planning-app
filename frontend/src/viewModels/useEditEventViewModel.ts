@@ -5,6 +5,7 @@ import {
   extractServerError,
   extractValidationErrors,
 } from "../utils/extractErrors";
+import { useAuthStore } from "../store/authStore";
 
 export function useEditEventViewModel(id: number) {
   const [event, setEvent] = useState<Event | null>(null);
@@ -13,6 +14,7 @@ export function useEditEventViewModel(id: number) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const isHydrated = useAuthStore((s) => s.isHydrated);
 
   const loadEvent = useCallback(async () => {
     try {
@@ -28,7 +30,7 @@ export function useEditEventViewModel(id: number) {
         location: ev.location,
         event_date: ev.event_date,
         type: ev.type,
-        tag_ids: [],
+        tag_ids: ev.tags.map((tag) => tag.id),
       });
     } catch (err) {
       setError(extractServerError(err));
@@ -38,8 +40,9 @@ export function useEditEventViewModel(id: number) {
   }, [id]);
 
   useEffect(() => {
+    if (!isHydrated) return;
     loadEvent();
-  }, [loadEvent]);
+  }, [loadEvent, isHydrated]);
 
   const updateField = <K extends keyof UpdateEventPayload>(
     field: K,
