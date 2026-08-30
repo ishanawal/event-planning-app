@@ -1,3 +1,4 @@
+import { LargeNumberLike } from "node:crypto";
 import db from "../../config/database";
 import { AppError } from "../../utils/errors";
 import logger from "../../utils/logger";
@@ -21,20 +22,62 @@ interface DbEvent {
 
 type EventFilter = "all" | "upcoming" | "past";
 
+interface EventTag {
+  id: number;
+  name: string;
+}
+
+type EventTagsMap = Record<number, EventTag[]>;
+
+interface RsvpCounts {
+  yes: number;
+  no: number;
+  maybe: number;
+}
+
 // Fetches all the tags for a given array of event IDs and groups them by event_id
 async function fetchTagsForEvents(
   eventIds: number[],
-): Promise<Record<number, string[]>> {
+): Promise<Record<number, EventTag[]>> {
   if (eventIds.length === 0) return {};
 
   const rows = await db("event_tags")
     .join("tags", "event_tags.tag_id", "tags.id")
     .whereIn("event_tags.event_id", eventIds)
-    .select("event_tags.event_id", "tags.name");
+    .select("event_tags.event_id", "tags.id", "tags.name");
 
-  return rows.reduce<Record<number, string[]>>((acc, row) => {
+  return rows.reduce<Record<number, EventTag[]>>((acc, row) => {
     if (!acc[row.event_id]) acc[row.event_id] = [];
-    acc[row.event_id].push(row.name);
+    acc[row.event_id].push({
+      id: row.id,
+      name: row.name,
+    });
+    return acc;
+  }, {});
+}
+
+async function fetchRsvpsForEvents(
+  eventIds: number[],
+): Promise<Record<number, RsvpCounts>> {
+  if (eventIds.length === 0) return {};
+
+  const rows = await db("rsvps")
+    .whereIn("event_id", eventIds)
+    .select("event_id")
+    .select(
+      db.raw(`COUNT(*) FILTER (WHERE status = 'yes')::int AS yes`),
+      db.raw(`COUNT(*) FILTER (WHERE status = 'no')::int AS no`),
+      db.raw(`COUNT(*) FILTER (WHERE status = 'maybe')::int AS maybe`),
+    )
+    .groupBy("event_id");
+
+  return rows.reduce<Record<number, RsvpCounts>>((acc, row) => {
+    acc[row.event_id] = {
+      yes: Number(row.yes),
+      no: Number(row.no),
+      maybe: Number(row.maybe),
+    };
+
     return acc;
   }, {});
 }
@@ -152,11 +195,19 @@ export async function listEvents(
 
   const eventsIds = events.map((e: { id: number }) => e.id);
 
-  const tagsMap = await fetchTagsForEvents(eventsIds);
+  const [tagsMap, rsvpsMap] = await Promise.all([
+    fetchTagsForEvents(eventsIds),
+    fetchRsvpsForEvents(eventsIds),
+  ]);
 
   const data = events.map((event: DbEvent & { creator_name: string }) => ({
     ...event,
     tags: tagsMap[event.id] || [],
+    rsvps: rsvpsMap[event.id] || {
+      yes: 0,
+      no: 0,
+      maybe: 0,
+    },
   }));
 
   return {
@@ -186,11 +237,19 @@ export async function getEventsById(id: number, currentUserId?: number) {
     throw new AppError("Event not found", 404, "EVENT_NOT_FOUND");
   }
 
-  const tagsMap = await fetchTagsForEvents([id]);
+  const [tagsMap, rsvpsMap] = await Promise.all([
+    fetchTagsForEvents([id]),
+    fetchRsvpsForEvents([id]),
+  ]);
 
   return {
     ...event,
     tags: tagsMap[id] || [],
+    rsvps: rsvpsMap[id] || {
+      yes: 0,
+      no: 0,
+      maybe: 0,
+    },
   };
 }
 
@@ -222,11 +281,21 @@ export async function createEvent(data: CreateEventBody, creatorId: number) {
 
   logger.info("Event created", { eventId: event.id, creatorId });
 
-  const tagsMap = await fetchTagsForEvents([event.id]);
+  const [tagsMap, rsvpsMap] = await Promise.all([
+    fetchTagsForEvents([event.id]),
+    fetchRsvpsForEvents([event.id]),
+  ]);
 
   return {
     ...event,
-    tags: tagsMap[event.id] || [],
+
+    tags: tagsMap[event.id] ?? [],
+
+    rsvps: rsvpsMap[event.id] ?? {
+      yes: 0,
+      no: 0,
+      maybe: 0,
+    },
   };
 }
 
@@ -291,8 +360,22 @@ export async function updateEvent(
 
   logger.info("Event updated", { eventId: id, userId });
 
-  const tagsMap = await fetchTagsForEvents([updated.id]);
-  return { ...updated, tags: tagsMap[updated.id] || [] };
+  const [tagsMap, rsvpsMap] = await Promise.all([
+    fetchTagsForEvents([updated.id]),
+    fetchRsvpsForEvents([updated.id]),
+  ]);
+
+  return {
+    ...updated,
+
+    tags: tagsMap[updated.id] ?? [],
+
+    rsvps: rsvpsMap[updated.id] ?? {
+      yes: 0,
+      no: 0,
+      maybe: 0,
+    },
+  };
 }
 
 export async function deleteEvent(id: number, userId: number) {

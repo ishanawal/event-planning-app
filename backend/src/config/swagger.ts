@@ -73,8 +73,14 @@ const options: swaggerJSDoc.Options = {
             creator_name: { type: "string", example: "Alice Smith" },
             tags: {
               type: "array",
-              items: { type: "string" },
-              example: ["hackathon", "networking"],
+              items: { $ref: "#components/schemas/Tag" },
+              example: [
+                { id: 1, name: "hackathon" },
+                { id: 3, name: "networking" },
+              ],
+            },
+            rsvps: {
+              $ref: "#/components/schemas/RsvpSummary",
             },
             created_at: { type: "string", format: "date-time" },
             updated_at: { type: "string", format: "date-time" },
