@@ -116,9 +116,7 @@ export default function EditEventPage() {
                 name="event_date"
                 type="datetime-local"
                 min={getMinDateTime()}
-                value={
-                  vm.form.event_date ? vm.form.event_date.slice(0, 16) : ""
-                }
+                value={toLocalDateTimeInput(vm.form.event_date)}
                 onChange={(e) => vm.updateField("event_date", e.target.value)}
                 error={vm.fieldErrors.event_date}
                 icon={<CalendarDays size={16} />}
@@ -209,4 +207,19 @@ export default function EditEventPage() {
       </main>
     </div>
   );
+}
+
+export function toLocalDateTimeInput(value: string | Date | null | undefined) {
+  if (!value) return "";
+
+  const date = value instanceof Date ? value : new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "";
+
+  const pad = (value: number) => String(value).padStart(2, "0");
+
+  return [
+    `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`,
+    `${pad(date.getHours())}:${pad(date.getMinutes())}`,
+  ].join("T");
 }
