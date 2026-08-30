@@ -9,7 +9,7 @@ import {
 
 import * as eventsController from "./events.controller";
 import { validate } from "../../middleware/validate.middleware";
-import { requireAuth } from "../../middleware/auth.middleware";
+import { optionalAuth, requireAuth } from "../../middleware/auth.middleware";
 
 const router = Router();
 
@@ -57,7 +57,12 @@ const router = Router();
  *                   items: { $ref: '#/components/schemas/Event' }
  *                 meta: { $ref: '#/components/schemas/PaginationMeta' }
  */
-router.get("/", validate(listEventsSchema), eventsController.listEvents);
+router.get(
+  "/",
+  optionalAuth,
+  validate(listEventsSchema),
+  eventsController.listEvents,
+);
 
 /**
  * @openapi
@@ -78,6 +83,7 @@ router.get("/", validate(listEventsSchema), eventsController.listEvents);
  */
 router.get(
   "/upcoming",
+  optionalAuth,
   validate(listEventsSchema),
   eventsController.listUpcomingEvents,
 );
@@ -94,6 +100,7 @@ router.get(
  */
 router.get(
   "/past",
+  optionalAuth,
   validate(listEventsSchema),
   eventsController.listPastEvents,
 );
@@ -128,7 +135,12 @@ router.get(
  *           application/json:
  *             schema: { $ref: '#/components/schemas/ErrorResponse' }
  */
-router.get("/:id", validate(eventParamsSchema), eventsController.getEvent);
+router.get(
+  "/:id",
+  optionalAuth,
+  validate(eventParamsSchema),
+  eventsController.getEvent,
+);
 
 // Protected routes
 /**

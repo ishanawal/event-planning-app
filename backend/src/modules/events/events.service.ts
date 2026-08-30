@@ -1,4 +1,3 @@
-import { LargeNumberLike } from "node:crypto";
 import db from "../../config/database";
 import { AppError } from "../../utils/errors";
 import logger from "../../utils/logger";
@@ -92,6 +91,30 @@ async function validateTagIds(tagIds: number[]): Promise<void> {
   }
 }
 
+function parseTagNames(tags?: string): string[] {
+  if (!tags) return [];
+  return [
+    ...new Set(
+      tags
+        .split(",")
+        .map((t) => t.trim().toLowerCase())
+        .filter(Boolean),
+    ),
+  ];
+}
+
+function eventIdsMatchingAllTags(tagNames: string[]) {
+  return db("event_tags")
+    .join("tags as filter_tags", "event_tags.tag_id", "filter_tags.id")
+    .whereRaw(
+      `LOWER(filter_tags.name) IN (${tagNames.map(() => "?").join(", ")})`,
+      tagNames,
+    )
+    .groupBy("event_tags.event_id")
+    .havingRaw("COUNT(DISTINCT LOWER(filter_tags.name)) = ?", [tagNames.length])
+    .select("event_tags.event_id");
+}
+
 export async function listEvents(
   query: ListEventsQuery,
   filter: EventFilter = "all",
@@ -145,31 +168,17 @@ export async function listEvents(
     });
   }
 
-  // Filtering by tags
-  if (tags) {
-    const tagNames = tags.split(",").map((t) => t.trim().toLowerCase());
-
-    baseQuery = baseQuery
-      .join("event_tags", "events.id", "event_tags.event_id")
-      .join("tags as filter_tags", "event_tags.tag_id", "filter_tags.id")
-      .whereIn("filter_tags.name", tagNames)
-      .groupBy(
-        "events.id",
-        "events.title",
-        "events.description",
-        "events.location",
-        "events.event_date",
-        "events.type",
-        "events.creator_id",
-        "events.created_at",
-        "events.updated_at",
-        "users.name",
-      )
-      .havingRaw("COUNT(DISTINCT filter_tags.name) = ?", [tagNames.length]);
+  // Filtering by tags (events that have every selected tag)
+  const tagNames = parseTagNames(tags);
+  if (tagNames.length > 0) {
+    const matchingIds = eventIdsMatchingAllTags(tagNames);
+    baseQuery = baseQuery.whereIn("events.id", matchingIds);
   }
 
   // Count total matching rows for pagination
-  let countQuery = db("events").count("events.id as count");
+  let countQuery = db("events")
+    .countDistinct("events.id as count")
+    .join("users", "events.creator_id", "users.id");
   countQuery = applyEventVisibility(countQuery, currentUserId);
 
   if (filter === "upcoming") countQuery.where("events.event_date", ">=", now);
@@ -185,8 +194,12 @@ export async function listEvents(
     });
   }
 
-  const [{ count }] = await countQuery;
-  const total = Number(count);
+  if (tagNames.length > 0) {
+    countQuery.whereIn("events.id", eventIdsMatchingAllTags(tagNames));
+  }
+
+  const countRows = await countQuery;
+  const total = Number(countRows[0]?.count ?? 0);
 
   const events = await baseQuery
     .orderBy(`events.${sortBy}`, order)

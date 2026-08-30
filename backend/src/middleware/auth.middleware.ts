@@ -1,10 +1,15 @@
 import { Request, Response, NextFunction } from "express";
+
 import { verifyAccessToken } from "../utils/jwt";
 
 declare global {
   namespace Express {
     interface Request {
-      user?: { userId: number; email: string; name: string };
+      user?: {
+        userId: number;
+        email: string;
+        name: string;
+      };
     }
   }
 }
@@ -16,16 +21,29 @@ export function requireAuth(
 ): void {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader?.startsWith("Bearer")) {
+  if (!authHeader?.startsWith("Bearer ")) {
     res.status(401).json({
       success: false,
-      error: { code: "UNAUTHORIZED", message: "Authentication required" },
+      error: {
+        code: "UNAUTHORIZED",
+        message: "Authentication required",
+      },
     });
-
     return;
   }
 
   const token = authHeader.split(" ")[1];
+
+  if (!token) {
+    res.status(401).json({
+      success: false,
+      error: {
+        code: "UNAUTHORIZED",
+        message: "Authentication required",
+      },
+    });
+    return;
+  }
 
   try {
     req.user = verifyAccessToken(token);
@@ -41,21 +59,56 @@ export function requireAuth(
   }
 }
 
-// Attaches req.user if a valid token is present, but never rejects the request.
-// Use on public routes that need to know who's asking (e.g. RSVP GET).
 export function optionalAuth(
   req: Request,
   _res: Response,
   next: NextFunction,
 ): void {
   const authHeader = req.headers.authorization;
-  if (authHeader?.startsWith("Bearer ")) {
-    const token = authHeader.split(" ")[1];
-    try {
-      req.user = verifyAccessToken(token);
-    } catch {
-      // It can be invalid / expired token but just ignore & proceed as unauthenticated
-    }
+
+  // No authentication supplied.
+  // This is allowed because the route is public.
+  if (!authHeader) {
+    next();
+    return;
   }
-  next();
+
+  // An Authorization header was supplied,
+  // so it must contain a valid Bearer token.
+  if (!authHeader.startsWith("Bearer ")) {
+    _res.status(401).json({
+      success: false,
+      error: {
+        code: "UNAUTHORIZED",
+        message: "Invalid authorization header",
+      },
+    });
+    return;
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  if (!token) {
+    _res.status(401).json({
+      success: false,
+      error: {
+        code: "UNAUTHORIZED",
+        message: "Invalid authorization token",
+      },
+    });
+    return;
+  }
+
+  try {
+    req.user = verifyAccessToken(token);
+    next();
+  } catch {
+    _res.status(401).json({
+      success: false,
+      error: {
+        code: "TOKEN_EXPIRED",
+        message: "Token expired or invalid",
+      },
+    });
+  }
 }
