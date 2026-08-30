@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { useAuthStore } from "./store/authStore";
-import { refreshSession } from "./api/auth.api";
+import { bootstrapSession } from "./api/auth.api";
 
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
@@ -25,12 +25,12 @@ const queryClient = new QueryClient({
 });
 
 function SessionProvider({ children }: { children: React.ReactNode }) {
-  const { setUser, clearAuth, setHydrated } = useAuthStore();
+  const { setUser, clearAuth, setHydrated, isHydrated } = useAuthStore();
 
   useEffect(() => {
     let mounted = true;
 
-    refreshSession()
+    bootstrapSession()
       .then((user) => {
         if (!mounted) return;
 
@@ -55,6 +55,14 @@ function SessionProvider({ children }: { children: React.ReactNode }) {
       mounted = false;
     };
   }, [setUser, clearAuth, setHydrated]);
+
+  if (!isHydrated) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
+      </div>
+    );
+  }
 
   return <>{children}</>;
 }

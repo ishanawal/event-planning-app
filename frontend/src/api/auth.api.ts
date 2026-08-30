@@ -32,6 +32,16 @@ export async function logout(): Promise<void> {
     setAccessToken(null);
   }
 }
+
+let sessionPromise: Promise<User | null> | null = null;
+
+export function bootstrapSession(): Promise<User | null> {
+  if (!sessionPromise) {
+    sessionPromise = refreshSession();
+  }
+  return sessionPromise;
+}
+
 export async function refreshSession(): Promise<User | null> {
   try {
     const { data: refreshData } =

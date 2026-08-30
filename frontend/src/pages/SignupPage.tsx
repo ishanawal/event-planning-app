@@ -49,34 +49,48 @@ export default function SignupPage() {
   return (
     <div className="flex min-h-screen bg-background">
       {/* Left panel */}
-      <div className="hidden w-[42%] shrink-0 flex-col justify-between bg-primary p-10 lg:flex xl:p-14">
-        <Link to="/" className="flex items-center gap-2.5 text-white">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20">
-            <BrandIcon />
-          </div>
-          <span className="text-[15px] font-semibold">Gathered</span>
-        </Link>
+      <div
+        className="relative hidden w-[42%] shrink-0 flex-col justify-between bg-primary bg-cover bg-center bg-no-repeat p-10 lg:flex xl:p-14"
+        style={{
+          backgroundImage:
+            "url('https://images.pexels.com/photos/19905188/pexels-photo-19905188.jpeg')",
+        }}
+      >
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-cream/60 blur-xs" />
 
-        <div>
-          <h1 className="text-4xl font-bold leading-tight text-white xl:text-5xl">
-            Plan something
-            <br />
-            worth going to.
-          </h1>
-          <p className="mt-4 max-w-xs text-base leading-7 text-white/70">
-            Create events, keep everything organised, let people know.
+        {/* Content */}
+        <div className="relative z-10 flex h-full flex-col justify-between">
+          <Link to="/" className="flex items-center gap-2.5 text-white">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20">
+              <BrandIcon />
+            </div>
+
+            <span className="text-[15px] font-semibold">Gathered</span>
+          </Link>
+
+          <div>
+            <h1 className="text-4xl font-bold leading-tight text-white xl:text-5xl">
+              Plan something
+              <br />
+              worth going to.
+            </h1>
+
+            <p className="mt-4 max-w-xs text-base leading-7 text-white/70">
+              Create events, keep everything organised, let people know.
+            </p>
+          </div>
+
+          <p className="text-sm text-white/50">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-white/80 underline-offset-2 hover:underline"
+            >
+              Sign in
+            </Link>
           </p>
         </div>
-
-        <p className="text-sm text-white/50">
-          Already have an account?{" "}
-          <Link
-            to="/login"
-            className="text-white/80 underline-offset-2 hover:underline"
-          >
-            Sign in
-          </Link>
-        </p>
       </div>
 
       {/* Right panel */}

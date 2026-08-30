@@ -14,6 +14,7 @@ import Button from "../components/ui/Button";
 import { useCreateEventViewModel } from "../viewModels/useCreateEventViewModel";
 import { useTagsViewModel } from "../viewModels/useTagsViewModel";
 import { getMinDateTime } from "../utils/getMinDateTime";
+import { TagChip } from "../components/common/TagChip";
 
 export default function CreateEventPage() {
   const navigate = useNavigate();
@@ -184,20 +185,12 @@ export default function CreateEventPage() {
                   {tagsVM.tags.map((tag) => {
                     const sel = selectedTagIds.includes(tag.id);
                     return (
-                      <button
+                      <TagChip
                         key={tag.id}
-                        type="button"
-                        onClick={() => toggleTag(tag.id)}
-                        className={[
-                          "flex items-center gap-1 rounded-xl border px-3 py-1 text-xs font-medium transition-colors",
-                          sel
-                            ? "border-primary/30 bg-primary/8 text-primary"
-                            : "border-border text-muted hover:border-border-hover hover:text-foreground",
-                        ].join(" ")}
-                      >
-                        {selectedTagIds.includes(tag.id) && <Check size={12} />}
-                        {tag.name}
-                      </button>
+                        tag={tag}
+                        isSelected={sel}
+                        toggleTag={() => toggleTag(tag.id)}
+                      />
                     );
                   })}
                 </div>

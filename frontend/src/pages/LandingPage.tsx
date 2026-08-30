@@ -13,8 +13,33 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
+import { EventCard } from "../components/common/EventCard";
+import type { Event } from "../types/event.types";
 
 export default function LandingPage() {
+  const dummyEvent: Event = {
+    id: 4,
+    title: "Team Lunch",
+    description: "Going for a lunch from office",
+    location: "Radission Hotel, Lazimpat, Kathmandu",
+    event_date: "2026-10-29T13:55:00.000Z",
+    type: "public",
+    creator_id: 2,
+    created_at: "2026-10-27T14:55:59.070Z",
+    updated_at: "2026-10-27T14:55:59.070Z",
+    creator_name: "Nikita Khuju",
+    tags: [
+      {
+        id: 4,
+        name: "meetup",
+      },
+    ],
+    rsvps: {
+      yes: 8,
+      no: 0,
+      maybe: 2,
+    },
+  };
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Navbar variant="marketing" />
@@ -53,52 +78,7 @@ export default function LandingPage() {
 
           {/* Preview card */}
           <div className="mx-auto w-full max-w-sm lg:mx-0">
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm shadow-black/5">
-              <div className="mb-5 flex items-start justify-between">
-                <div>
-                  <p className="text-xs font-medium text-placeholder uppercase tracking-wider">
-                    Friday · Aug 28
-                  </p>
-                  <h3 className="mt-1 text-lg font-semibold text-foreground">
-                    Dinner at Marco's
-                  </h3>
-                  <p className="mt-0.5 text-sm text-muted">
-                    Marco's Kitchen, Kathmandu
-                  </p>
-                </div>
-                <span className="rounded-lg border border-border bg-surface px-2.5 py-1 text-xs font-medium text-muted">
-                  Public
-                </span>
-              </div>
-
-              <div className="space-y-2.5">
-                <Row
-                  icon={<CalendarDays size={14} />}
-                  text="Friday, 28 Aug · 7:30 PM"
-                />
-                <Row icon={<Users size={14} />} text="8 going · 2 maybe" />
-                <Row icon={<Tags size={14} />} text="dinner · friends" />
-              </div>
-
-              <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
-                <div className="flex -space-x-2">
-                  {["A", "M", "S", "K"].map((l) => (
-                    <div
-                      key={l}
-                      className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-card bg-primary/15 text-[11px] font-semibold text-primary"
-                    >
-                      {l}
-                    </div>
-                  ))}
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-card bg-surface text-[10px] text-muted">
-                    +4
-                  </div>
-                </div>
-                <span className="text-xs font-medium text-primary">
-                  View details →
-                </span>
-              </div>
-            </div>
+            <EventCard event={dummyEvent} isDummy={true} />
           </div>
         </div>
       </section>

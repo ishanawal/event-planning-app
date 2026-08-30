@@ -49,34 +49,43 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen bg-background">
       {/* Left panel */}
-      <div className="hidden w-[42%] shrink-0 flex-col justify-between bg-primary p-10 lg:flex xl:p-14">
-        <Link to="/" className="flex items-center gap-2.5 text-white">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20">
-            <BrandIcon />
+      <div
+        className="relative hidden w-[42%] shrink-0 flex-col justify-between bg-primary bg-cover bg-center bg-no-repeat p-10 lg:flex xl:p-14"
+        style={{
+          backgroundImage:
+            "url('https://images.pexels.com/photos/8581041/pexels-photo-8581041.jpeg')",
+        }}
+      >
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-cream/60" />
+        {/* Content */}
+        <div className="relative z-10 flex h-full flex-col justify-between">
+          <Link to="/" className="flex items-center gap-2.5 text-white">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20">
+              <BrandIcon />
+            </div>
+            <span className="text-[15px] font-semibold"> Gathered </span>
+          </Link>
+          <div>
+            <h1 className="text-4xl font-bold leading-tight text-white xl:text-5xl">
+              Welcome back.
+            </h1>
+            <p className="mt-4 max-w-xs text-base leading-7 text-white/70">
+              Your events are waiting. Pick up where you left off.
+            </p>
           </div>
-          <span className="text-[15px] font-semibold">Gathered</span>
-        </Link>
-
-        <div>
-          <h1 className="text-4xl font-bold leading-tight text-white xl:text-5xl">
-            Welcome back.
-          </h1>
-          <p className="mt-4 max-w-xs text-base leading-7 text-white/70">
-            Your events are waiting. Pick up where you left off.
+          <p className="text-sm text-white/50">
+            No account?
+            <Link
+              to="/signup"
+              className="text-white/80 underline-offset-2 hover:underline"
+            >
+              {" "}
+              Create one
+            </Link>
           </p>
         </div>
-
-        <p className="text-sm text-white/50">
-          No account?{" "}
-          <Link
-            to="/signup"
-            className="text-white/80 underline-offset-2 hover:underline"
-          >
-            Create one
-          </Link>
-        </p>
       </div>
-
       {/* Right panel */}
       <div className="flex flex-1 flex-col bg-background">
         {/* Mobile header */}
@@ -174,11 +183,12 @@ export default function LoginPage() {
             </form>
 
             <p className="mt-6 text-center text-sm text-muted">
-              No account?{" "}
+              No account?
               <Link
                 to="/signup"
                 className="font-medium text-primary hover:text-primary-hover"
               >
+                {" "}
                 Create one for free
               </Link>
             </p>
